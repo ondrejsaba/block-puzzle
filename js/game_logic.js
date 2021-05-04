@@ -131,13 +131,14 @@ const generate_tiles = () => {
             mousedown: () => {
                 tilesprops.focused = hover.name
                 tilesprops.type = tilesprops.deck[index]
+                document.querySelector("#main").style.cursor = "none"
 
                 Object.assign(objects[name.tile], {
                     width: tiles[tilesprops.deck[index]].map[0].length*50,
                     height: tiles[tilesprops.deck[index]].map.length*50,
                     top: true
                 })
-            }
+            },
         }
 
         put_images()
@@ -228,6 +229,7 @@ canvas.addEventListener('mousemove', () => {
 
 canvas.addEventListener('mouseup', () => {
     if (tilesprops.focused !== "") {
+        document.querySelector("#main").style.cursor = "default"
         if (tilesprops.can_place == true) {
             delete_object(tilesprops.focused)
 
