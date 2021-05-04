@@ -1,0 +1,30 @@
+html, body {
+    margin: 0;
+    height: 100vh;
+}
+
+#main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 550px;
+    width: 400px;
+}
+
+#logo {
+    display: block;
+    margin: 0 auto;
+    height: 100px;
+}
+
+#render_canvas {
+    width: 400px;
+    height: 550px;
+    background-color: #303036;
+    border-radius: 8px;
+}
+
+#images {
+    display: none;
+}
