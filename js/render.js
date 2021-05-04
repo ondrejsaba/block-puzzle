@@ -14,8 +14,8 @@ const render_objects = (objects) => {
 
 const render_canvas = () => {
     const priority_divide = {
-        usual: Object.fromEntries(Object.entries(objects).filter((object) => objects[object[0]].top != true)),
-        top: Object.fromEntries(Object.entries(objects).filter((object) => objects[object[0]].top == true))
+        usual: filter_object(objects, (object) => objects[object[0]].top != true),
+        top: filter_object(objects, (object) => objects[object[0]].top == true)
     }
     for (type of Object.keys(priority_divide)) {
         render_objects(priority_divide[type])

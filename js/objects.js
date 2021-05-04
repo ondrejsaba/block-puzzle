@@ -32,8 +32,12 @@ const render_rectangle = (x,y,width,height,color) => {
 }
 
 // object manipulation
+const filter_object = (id,filter) => {
+    return Object.fromEntries(Object.entries(id).filter(filter))
+}
+
 const delete_object = (id) => {
-    objects = Object.fromEntries(Object.entries(objects).filter((object) => object[0] != id))
+    objects = filter_object(objects, (object) => object[0] != id)
 }
 
 const new_object = (object) => {
