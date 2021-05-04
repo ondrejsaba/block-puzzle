@@ -16,8 +16,9 @@ let listeners = {
         }
     
         let objects_hover = []
-    
-        for (object in objects) {
+        const visible_objects = Object.fromEntries(Object.entries(objects).filter((object) => objects[object[0]].hide != true))
+
+        for (object in visible_objects) {
             const { x, y, width, height } = objects[object]
     
             if (x < cursor.x && cursor.x < x+width && y < cursor.y && cursor.y < y+height) {

@@ -72,6 +72,15 @@ const tiles = {
         ],
         count: 1,
         background: "#04724D"
+    },
+    9: {
+        map: [
+            [1,1],
+            [1,0],
+            [1,0]
+        ],
+        count: 4,
+        background: "#52489C"
     }
 }
 
@@ -91,7 +100,7 @@ const update_score = () => {
 
 const generate_tile_type = () => {
     let index = tilesprops.deck.indexOf(0)
-    let type = Math.floor(Math.random() * 8) + 1
+    let type = Math.floor(Math.random() * Object.keys(tiles).length) + 1
     if (tilesprops.deck.includes(type)) {
         generate_tile_type()
     } else {
