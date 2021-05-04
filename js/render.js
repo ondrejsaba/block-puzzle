@@ -1,4 +1,4 @@
-const render_canvas = () => {
+const render_objects = (objects) => {
     for (object in objects) {
         const { x, y, width, height } = objects[object]
         if (objects[object]["hide"] === undefined || objects[object]["hide"] == false) {
@@ -10,7 +10,16 @@ const render_canvas = () => {
             }
         }
     }
+}
 
+const render_canvas = () => {
+    const priority_divide = {
+        usual: Object.fromEntries(Object.entries(objects).filter((object) => objects[object[0]].top != true)),
+        top: Object.fromEntries(Object.entries(objects).filter((object) => objects[object[0]].top == true))
+    }
+    for (type of Object.keys(priority_divide)) {
+        render_objects(priority_divide[type])
+    }
     window.requestAnimationFrame(render_canvas)
 }
 
