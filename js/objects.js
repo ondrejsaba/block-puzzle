@@ -40,6 +40,9 @@ const new_object = (object) => {
     if (typeof object === 'object' && object !== null) {
         for (key of Object.keys(object)) {
             objects[key] = object[key]
+            if (object[key].source !== undefined) {
+                put_images()
+            }
         }
     }
 }

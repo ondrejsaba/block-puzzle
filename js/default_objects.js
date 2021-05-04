@@ -12,21 +12,12 @@ let objects = {
         width: canvas.width,
         height: 150,
         background: "#EFEFEF",
-        mousedown: () => {
-            objects.deck.y -= 20
-        },
-        mouseup: () => {
-            objects.deck.y += 20
-        }
     },
-    "logo": {
-        x: 50,
-        y: 20,
-        width: 300,
-        height: 120,
-        source: "assets/logoblue.png",
-        mousedown: () => {
-            console.log("click")
-        }
+    "board": {
+        x: 0,
+        y: 0,
+        width: canvas.width,
+        height: 400,
+        source: "assets/board.png"
     }
 }
