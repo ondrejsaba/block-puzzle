@@ -12,7 +12,7 @@ let listeners = {
     mousemove: (e) => {
         cursor = {
             x: Math.round((canvas.width-window.innerWidth)/2+(e.clientX)),
-            y: Math.round((canvas.height-window.innerHeight)/2+(e.clientY))
+            y: Math.round((canvas.height-window.innerHeight-document.querySelector("#main-infobar").offsetHeight)/2+(e.clientY))
         }
     
         let objects_hover = []

@@ -8,19 +8,24 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 550px;
+    height: 610px;
     width: 400px;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
 }
 
 #main h2 {
-    position: absolute;
     font-family: 'Roboto';
-    text-align: left;
-    padding-left: 10px;
     font-size: 28px;
-    width: 400px;
-    top: -70px;
     font-weight: 300;
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+}
+
+#main-infobar {
+    height: 60px;
+    position: relative;
 }
 
 .btn {
@@ -35,11 +40,11 @@ html, body {
     height: 40px;
     width: 100px;
     border-radius: 20px;
-    position: absolute;
-    top: -50px;
-    left: 300px;
     font-weight: 500;
     box-sizing: border-box;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }
 
 #reset-icon {
@@ -78,8 +83,6 @@ html, body {
     width: 400px;
     height: 550px;
     background-color: #303036;
-    border-radius: 8px;
-    border: 1px solid #e2e2e2;
 }
 
 #images {
