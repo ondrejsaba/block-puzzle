@@ -1,3 +1,4 @@
+let score = 0
 const map_size = 8
 let map = []
 
@@ -84,6 +85,10 @@ let tilesprops = {
 
 let place_location = {x: 0, y: 0}
 
+const update_score = () => {
+    document.querySelector("#score").innerHTML = score
+}
+
 const generate_tile_type = () => {
     let index = tilesprops.deck.indexOf(0)
     let type = Math.floor(Math.random() * 8) + 1
@@ -157,6 +162,7 @@ const check_full = () => {
         }
 
         if (count.row == map_size) {
+            score += 10
             for (x=0;x<map_size;x++) {
                 map[y][x] = 0
                 if (objects[`placed-tile${x}x${y}`] !== undefined) {
@@ -166,6 +172,7 @@ const check_full = () => {
         }
 
         if (count.column == map_size) {
+            score += 10
             for (x=0;x<map_size;x++) {
                 map[x][y] = 0
                 if (objects[`placed-tile${y}x${x}`] !== undefined) {
@@ -224,6 +231,7 @@ canvas.addEventListener('mouseup', () => {
         if (tilesprops.can_place == true) {
             delete_object(tilesprops.focused)
 
+            score += tiles[tilesprops.type].count
             let tilemap = tiles[tilesprops.type].map
             for (x=0;x<tilemap[0].length;x++) {
                 for (y=0;y<tilemap.length;y++) {
@@ -241,6 +249,7 @@ canvas.addEventListener('mouseup', () => {
                 }
             }
             check_full()
+            update_score()
             
             tilesprops.can_place = false
             tilesprops.deck[tilesprops.deck.indexOf(tilesprops.type)] = 0

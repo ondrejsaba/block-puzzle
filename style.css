@@ -12,6 +12,16 @@ html, body {
     width: 400px;
 }
 
+#main h2 {
+    position: absolute;
+    text-align: center;
+    font-family: 'Roboto';
+    font-size: 28px;
+    width: 400px;
+    top: -70px;
+    font-weight: 300;
+}
+
 #logo {
     display: block;
     margin: 0 auto;
@@ -23,6 +33,7 @@ html, body {
     height: 550px;
     background-color: #303036;
     border-radius: 8px;
+    border: 1px solid #e2e2e2;
 }
 
 #images {
