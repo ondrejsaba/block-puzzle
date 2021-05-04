@@ -14,18 +14,64 @@ html, body {
 
 #main h2 {
     position: absolute;
-    text-align: center;
     font-family: 'Roboto';
+    text-align: left;
+    padding-left: 10px;
     font-size: 28px;
     width: 400px;
     top: -70px;
     font-weight: 300;
 }
 
-#logo {
+.btn {
+    background-color: #3063ec;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Roboto';
+    font-size: 16px;
+}
+
+#reset-btn {
+    height: 40px;
+    width: 100px;
+    border-radius: 20px;
+    position: absolute;
+    top: -50px;
+    left: 300px;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+#reset-icon {
+    height: 18px;
+    width: 18px;
+    background-image: url('assets/reset.png');
+    background-size: cover;
+    float: left;
+    margin-right: 10px;
+}
+
+#reset-btn-content {
+    text-align: left;
+    width: 70px;
     display: block;
     margin: 0 auto;
-    height: 100px;
+    margin-top: 10px;
+}
+
+#reset-btn:hover {
+    border: 2px solid #3063ec;
+    color: #3063ec;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+#reset-btn:hover #reset-btn-content {
+    margin-top: 8px;
+}
+
+#reset-btn:hover #reset-icon {
+    background-image: url('assets/reset-blue.png');
 }
 
 #render_canvas {
@@ -38,4 +84,8 @@ html, body {
 
 #images {
     display: none;
+}
+
+::selection {
+    background-color: none;
 }

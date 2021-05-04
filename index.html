@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="style.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
         <title>blockpuzzle.js</title>
 
     </head>
@@ -17,6 +17,11 @@
 
         <div id="main">
             <h2 id="score">0</h2>
+            <div class="btn" id="reset-btn">
+                <div id="reset-btn-content">
+                    <div id="reset-icon"></div>reset
+                </div>
+            </div>
             <canvas id="render_canvas"></canvas>
         </div>
 
@@ -26,6 +31,7 @@
         <script src="js/mouse_detection.js"></script>
         <script src="js/render.js"></script>
         <script src="js/game_logic.js"></script>
+        <script src="js/reset.js"></script>
 
     </body>
 
