@@ -25,5 +25,6 @@ reset_buttons.forEach((btn) => {
         generate_tiles()
 
         document.querySelector("#end").style.display = "none"
+        document.querySelector("#reset-btn").classList.remove("inactive")
     }
 })

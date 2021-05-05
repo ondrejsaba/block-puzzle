@@ -94,6 +94,27 @@ const map_loop = (main, before = () => {}, after = () => {}) => {
     }
 }
 
+// animation - disappearing row/column
+let animation = {
+    stack: []
+}
+
+setInterval(async () => {
+   for (tile of animation.stack) {
+        const tile_name = `placed-tile${tile.x}x${tile.y}`
+        const object = objects[tile_name]
+        if (object.opacity > 0.1) {
+            Object.assign(object, {
+                opacity: object.opacity-0.1
+            })
+        } else {
+            animation.stack = animation.stack.filter((element) => element != tile)
+            delete_object(tile_name)
+            map[tile.y][tile.x] = 0
+        }
+    }
+}, 10)
+
 // checking for full rows or columns
 let count = {
     row: 0,
@@ -101,6 +122,7 @@ let count = {
 }
 
 const check_full = () => {
+    load_stack = []
     map_loop(() => {
         for (x = 0; x < map_size; x++) {
             if (map[y][x] != 0) {
@@ -119,21 +141,26 @@ const check_full = () => {
         if (map_size == count.row) {
             score += 10
             for (x = 0; x < map_size; x++) {
-                map[y][x] = 0
-                if (objects[`placed-tile${x}x${y}`] !== undefined) {
-                    delete_object(`placed-tile${x}x${y}`)
+                if (!load_stack.some((object) => object.x == x && object.y == y)) {
+                    load_stack.push({
+                        x: x,
+                        y: y
+                    })
                 }
             }
         }
         if (map_size == count.column) {
             score += 10
             for (x = 0; x < map_size; x++) {
-                map[x][y] = 0
-                if (objects[`placed-tile${y}x${x}`] !== undefined) {
-                    delete_object(`placed-tile${y}x${x}`)
+                if (!load_stack.some((object) => object.x == y && object.y == x)) {
+                    load_stack.push({
+                        x: y,
+                        y: x
+                    })
                 }
             } 
         }
+        animation.stack = [...load_stack]
     })
 }
 
@@ -228,7 +255,8 @@ canvas.addEventListener('mouseup', () => {
                             y: (place_location.y+y)*50,
                             width: 50,
                             height: 50,
-                            background: tiles[tilesprops.type].background
+                            background: tiles[tilesprops.type].background,
+                            opacity: 1
                         }
                     }
                 }
@@ -249,6 +277,7 @@ canvas.addEventListener('mouseup', () => {
 
             if (check_moves() == 0) {
                 document.querySelector("#end").style.display = "block"
+                document.querySelector("#reset-btn").classList.add("inactive")
                 end = true
             }
         } else {

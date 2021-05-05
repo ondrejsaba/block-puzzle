@@ -19,14 +19,16 @@ const put_images = () => {
 put_images()
 
 // object rendering
-const render_image = (x,y,width,height,id) => {
+const render_image = (x,y,width,height,id,opacity = 1) => {
     const img = document.querySelector(`#${id}`)
     if (img.complete) {
+        context.globalAlpha = opacity
         context.drawImage(img,x,y,width,height)
     }
 }
 
-const render_rectangle = (x,y,width,height,color) => {
+const render_rectangle = (x,y,width,height,color,opacity = 1) => {
+    context.globalAlpha = opacity
     context.fillStyle = color
     context.fillRect(x,y,width,height)
 }
