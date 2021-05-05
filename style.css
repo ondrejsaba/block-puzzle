@@ -20,12 +20,13 @@ html, body {
     font-weight: 300;
     position: absolute;
     bottom: -10px;
-    left: 20px;
+    left: 15px;
 }
 
 #main-infobar {
     height: 60px;
     position: relative;
+    cursor: default;
 }
 
 .btn {
@@ -83,6 +84,55 @@ html, body {
     width: 400px;
     height: 550px;
     background-color: #303036;
+    border-radius: 8px;
+}
+
+#end {
+    display: none;
+    position: absolute;
+    height: 550px;
+    width: 400px;
+    border-radius: 8px;
+    bottom: 0;
+    background-color: rgba(23,23,23,0.5);
+    backdrop-filter: blur(4px);
+}
+
+#end-box {
+    height: fit-content;
+    width: fit-content;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
+
+#end-box h2 {
+    position: relative;
+    text-align: center;
+    top: 0;
+    left: 0;
+    font-size: 32px;
+    font-weight: 500;
+    width: 300px;
+    height: 30px;
+    color: #ffffff;
+}
+
+#end-box .btn {
+    height: 30px;
+    width: 120px;
+    border-radius: 20px;
+    padding-top: 10px;
+    display: block;
+    margin: 0 auto;
+    margin-top: -10px;
+    transition: 0.1s ease-out;
+    cursor: pointer;
+}
+
+#end-box .btn:hover {
+    background-color: #2c59d4;
 }
 
 #images {

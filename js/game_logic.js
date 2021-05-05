@@ -81,6 +81,14 @@ const tiles = {
         ],
         count: 4,
         background: "#52489C"
+    },
+    10: {
+        map: [
+            [0,1,1],
+            [1,1,0]
+        ],
+        count: 4,
+        background: "#FFE66D"
     }
 }
 
@@ -98,6 +106,7 @@ const update_score = () => {
     document.querySelector("#score").innerHTML = score
 }
 
+// regeneration of the tile deck
 const generate_tile_type = () => {
     let index = tilesprops.deck.indexOf(0)
     let type = Math.floor(Math.random() * Object.keys(tiles).length) + 1
@@ -155,14 +164,25 @@ const generate_tiles = () => {
 }
 generate_tiles()
 
-const check_full = () => {
-    for (y=0;y<map_size;y++) {
-        let count = {
-            row: 0,
-            column: 0
+const map_loop = (main, before = () => {}, after = () => {}) => {
+    for (y = 0; y < map_size; y++) {
+        before()
+        for (x = 0; x < map_size; x++) {
+            main()
         }
+        after()
+    }
+}
 
-        for (x=0;x<map_size;x++) {
+// checking for full rows or columns
+let count = {
+    row: 0,
+    column: 0
+}
+
+const check_full = () => {
+    map_loop(() => {
+        for (x = 0; x < map_size; x++) {
             if (map[y][x] != 0) {
                 count.row += 1
             }
@@ -170,27 +190,58 @@ const check_full = () => {
                 count.column += 1
             }
         }
+    }, () => {
+        count = {
+            row: 0,
+            column: 0
+        }
+    }, () => {
+        switch (map_size) {
+            case count.row:
+                score += 10
+                for (x = 0; x < map_size; x++) {
+                    map[y][x] = 0
+                    if (objects[`placed-tile${x}x${y}`] !== undefined) {
+                        delete_object(`placed-tile${x}x${y}`)
+                    }
+                }
+            case count.column:
+                score += 10
+                for (x = 0; x < map_size; x++) {
+                    map[x][y] = 0
+                    if (objects[`placed-tile${y}x${x}`] !== undefined) {
+                        delete_object(`placed-tile${y}x${x}`)
+                    }
+                } 
+            default:
+                break;
+        }
+    })
+}
 
-        if (count.row == map_size) {
-            score += 10
-            for (x=0;x<map_size;x++) {
-                map[y][x] = 0
-                if (objects[`placed-tile${x}x${y}`] !== undefined) {
-                    delete_object(`placed-tile${x}x${y}`)
+// checking whether there are any other moves possible
+const check_moves = () => {
+    let possible_moves = 0
+    for (tile of tilesprops.deck) {
+        const tilemap = tiles[tile].map
+        map_loop(() => {
+            if (x <= map_size-tilemap[0].length && y <= map_size-tilemap.length) {
+                let pass = 0
+                for (tx = 0; tx < tilemap[0].length; tx++) {
+                    for (ty = 0; ty < tilemap.length; ty++) {
+                        if (tilemap[ty][tx] != 0 && map[y+ty][x+tx] == 0) {
+                            pass += 1
+                        }
+                    }
+                }
+
+                if (pass == tiles[tile].count) {
+                    possible_moves += 1
                 }
             }
-        }
-
-        if (count.column == map_size) {
-            score += 10
-            for (x=0;x<map_size;x++) {
-                map[x][y] = 0
-                if (objects[`placed-tile${y}x${x}`] !== undefined) {
-                    delete_object(`placed-tile${y}x${x}`)
-                }
-            } 
-        }
+        })
     }
+    return possible_moves
 }
 
 canvas.addEventListener('mousemove', () => {
@@ -208,8 +259,8 @@ canvas.addEventListener('mousemove', () => {
 
             let tilemap = tiles[tilesprops.type].map
             let pass = 0
-            for (x=0;x<tilemap[0].length;x++) {
-                for (y=0;y<tilemap.length;y++) {
+            for (x = 0; x < tilemap[0].length; x++) {
+                for (y = 0; y < tilemap.length; y++) {
                     if (tilemap[y][x] != 0 && map[y+place_location.y][x+place_location.x] == 0) {
                         pass += 1
                     }
@@ -240,12 +291,17 @@ canvas.addEventListener('mouseup', () => {
     if (tilesprops.focused !== "") {
         document.querySelector("#main").style.cursor = "default"
         if (tilesprops.can_place == true) {
-            delete_object(tilesprops.focused)
-
+            const objects_to_delete = [
+                tilesprops.focused,
+                tilesprops.focused + "-shadow"
+            ]
+            for (object of objects_to_delete) {
+                delete_object(object)
+            }
             score += tiles[tilesprops.type].count
             let tilemap = tiles[tilesprops.type].map
-            for (x=0;x<tilemap[0].length;x++) {
-                for (y=0;y<tilemap.length;y++) {
+            for (x = 0; x < tilemap[0].length; x++) {
+                for (y = 0; y < tilemap.length; y++) {
                     if (tilemap[y][x] != 0) {
                         map[place_location.y+y][place_location.x+x] = tilesprops.type
 
@@ -259,12 +315,23 @@ canvas.addEventListener('mouseup', () => {
                     }
                 }
             }
-            check_full()
-            update_score()
-            
+
             tilesprops.can_place = false
             tilesprops.deck[tilesprops.deck.indexOf(tilesprops.type)] = 0
-            generate_tiles()
+
+            const run_functions = [
+                check_full,
+                update_score,
+                generate_tiles,
+            ]
+            
+            for (func of run_functions) {
+                func()
+            }
+
+            if (check_moves() == 0) {
+                document.querySelector("#end").style.display = "block"
+            }
         } else {
             Object.assign(objects[tilesprops.focused], {
                 x: objects[tilesprops.focused].default_x,
@@ -274,7 +341,6 @@ canvas.addEventListener('mouseup', () => {
                 top: false
             })
         }
-        objects[`${tilesprops.focused}-shadow`].hide = true
         tilesprops.focused = ""
     }
 })

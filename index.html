@@ -16,6 +16,7 @@
         <div id="images"></div>
 
         <div id="main">
+
             <div id="main-infobar">
                 <h2 id="score">0</h2>
                 <div class="btn" id="reset-btn">
@@ -24,7 +25,16 @@
                     </div>
                 </div>
             </div>
+
+            <div id="end">
+                <div id="end-box">
+                    <h2>No moves left!</h2>
+                    <div class="btn" id="tryagain-btn">Try again</div>
+                </div>
+            </div>
+
             <canvas id="render_canvas"></canvas>
+
         </div>
 
         <script src="js/canvas.js"></script>
@@ -33,7 +43,7 @@
         <script src="js/mouse_detection.js"></script>
         <script src="js/render.js"></script>
         <script src="js/game_logic.js"></script>
-        <script src="js/reset.js"></script>
+        <script src="js/ui.js"></script>
 
     </body>
 
