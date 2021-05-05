@@ -13,9 +13,16 @@ reset_buttons.forEach((btn) => {
             }
         }
 
-        objects = filter_object(objects, (object) => !object[0].includes("placed"))
+        objects = filter_object(objects, (object) => {
+            return !object[0].includes("tile")
+        })
+
         score = 0
+        end = false
+        tilesprops.deck = [0,0,0]
+
         update_score()
+        generate_tiles()
 
         document.querySelector("#end").style.display = "none"
     }

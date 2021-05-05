@@ -1,6 +1,7 @@
+let end = false
 let score = 0
-const map_size = 8
 let map = []
+const map_size = 8
 
 for (i=0;i<map_size;i++) {
     map.push([])
@@ -89,6 +90,22 @@ const tiles = {
         ],
         count: 4,
         background: "#FFE66D"
+    },
+    11: {
+        map: [
+            [0,1,0],
+            [1,1,1]
+        ],
+        count: 4,
+        background: "#EF798A"
+    },
+    12: {
+        map: [
+            [1,0,0],
+            [1,1,1]
+        ],
+        count: 4,
+        background: "#60992D"
     }
 }
 
@@ -147,15 +164,17 @@ const generate_tiles = () => {
             source: `assets/tiles/${tilesprops.deck[index]}.png`,
 
             mousedown: () => {
-                tilesprops.focused = hover.name
-                tilesprops.type = tilesprops.deck[index]
-                document.querySelector("#main").style.cursor = "none"
+                if (!end) {
+                    tilesprops.focused = hover.name
+                    tilesprops.type = tilesprops.deck[index]
+                    document.querySelector("#main").style.cursor = "none"
 
-                Object.assign(objects[name.tile], {
-                    width: tiles[tilesprops.deck[index]].map[0].length*50,
-                    height: tiles[tilesprops.deck[index]].map.length*50,
-                    top: true
-                })
+                    Object.assign(objects[name.tile], {
+                        width: tiles[tilesprops.deck[index]].map[0].length*50,
+                        height: tiles[tilesprops.deck[index]].map.length*50,
+                        top: true
+                    })
+                }
             },
         }
 
@@ -196,25 +215,23 @@ const check_full = () => {
             column: 0
         }
     }, () => {
-        switch (map_size) {
-            case count.row:
-                score += 10
-                for (x = 0; x < map_size; x++) {
-                    map[y][x] = 0
-                    if (objects[`placed-tile${x}x${y}`] !== undefined) {
-                        delete_object(`placed-tile${x}x${y}`)
-                    }
+        if (map_size == count.row) {
+            score += 10
+            for (x = 0; x < map_size; x++) {
+                map[y][x] = 0
+                if (objects[`placed-tile${x}x${y}`] !== undefined) {
+                    delete_object(`placed-tile${x}x${y}`)
                 }
-            case count.column:
-                score += 10
-                for (x = 0; x < map_size; x++) {
-                    map[x][y] = 0
-                    if (objects[`placed-tile${y}x${x}`] !== undefined) {
-                        delete_object(`placed-tile${y}x${x}`)
-                    }
-                } 
-            default:
-                break;
+            }
+        }
+        if (map_size == count.column) {
+            score += 10
+            for (x = 0; x < map_size; x++) {
+                map[x][y] = 0
+                if (objects[`placed-tile${y}x${x}`] !== undefined) {
+                    delete_object(`placed-tile${y}x${x}`)
+                }
+            } 
         }
     })
 }
@@ -331,6 +348,7 @@ canvas.addEventListener('mouseup', () => {
 
             if (check_moves() == 0) {
                 document.querySelector("#end").style.display = "block"
+                end = true
             }
         } else {
             Object.assign(objects[tilesprops.focused], {

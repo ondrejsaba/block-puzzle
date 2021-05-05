@@ -90,10 +90,10 @@ html, body {
 #end {
     display: none;
     position: absolute;
-    height: 550px;
+    height: 400px;
     width: 400px;
     border-radius: 8px;
-    bottom: 0;
+    bottom: 150px;
     background-color: rgba(23,23,23,0.5);
     backdrop-filter: blur(4px);
 }
