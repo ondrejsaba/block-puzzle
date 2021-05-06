@@ -1,13 +1,55 @@
+const sounds = {
+    place: new Audio("assets/audio/place.wav")
+}
+
 let end = false
 let score = 0
-let map = []
 const map_size = 8
 
-for (i=0;i<map_size;i++) {
-    map.push([])
-    for (j=0;j<map_size;j++) {
-        map[i].push(0)
+const map_loop = (main, before = () => {}, after = () => {}) => {
+    for (y = 0; y < map_size; y++) {
+        before()
+        for (x = 0; x < map_size; x++) {
+            main()
+        }
+        after()
     }
+}
+
+let map = []
+map_loop(() => {
+    map[y][x] = 0
+}, () => {
+    map.push([])
+})
+
+let bonuses = {
+    total: {
+        random: 0
+    },
+    uses: {
+        random: 0
+    },
+    get: 100
+}
+
+const update_bonuses = () => {
+    for (bonus of Object.keys(bonuses.total)) {
+        const total = bonuses.total[bonus] - bonuses.uses[bonus]
+        const condition = total > 0
+        Object.assign(document.querySelector(`#${bonus}-bubble`), {
+            innerHTML: total,
+            style: `display: ${condition ? "block" : "none"}`
+        })
+    }
+}
+
+const update_score = () => {
+    document.querySelector("#score").innerHTML = score
+    for (bonus of Object.keys(bonuses.total)) {
+        bonuses.total[bonus] = Math.floor(score/bonuses.get)
+    }
+    update_bonuses()
 }
 
 let tilesprops = {
@@ -19,14 +61,6 @@ let tilesprops = {
 }
 
 let place_location = {x: 0, y: 0}
-
-const sounds = {
-    place: new Audio("assets/audio/place.wav")
-}
-
-const update_score = () => {
-    document.querySelector("#score").innerHTML = score
-}
 
 // regeneration of the tile deck
 const generate_tile_type = () => {
@@ -91,16 +125,6 @@ const generate_tiles = () => {
     }
 }
 generate_tiles()
-
-const map_loop = (main, before = () => {}, after = () => {}) => {
-    for (y = 0; y < map_size; y++) {
-        before()
-        for (x = 0; x < map_size; x++) {
-            main()
-        }
-        after()
-    }
-}
 
 // checking for full rows or columns
 let count = {
@@ -257,7 +281,7 @@ canvas.addEventListener('mouseup', () => {
                 func()
             }
 
-            if (check_moves() == 0) {
+            if (check_moves() == 0 && animation_done("tile")) {
                 document.querySelector("#end").style.display = "block"
                 document.querySelector("#reset-btn").classList.add("inactive")
                 end = true
