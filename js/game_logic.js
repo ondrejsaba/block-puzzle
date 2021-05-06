@@ -28,26 +28,6 @@ const update_score = () => {
     document.querySelector("#score").innerHTML = score
 }
 
-//setInterval(async () => {
-//   for (tile of animation.tile.stack) {
-//        const tile_name = `placed-tile${tile.x}x${tile.y}`
-//        const object = objects[tile_name]
-//        if (object.opacity > 0.1) {
-//            Object.assign(object, {
-//                opacity: object.opacity-0.1,
-//                width: object.width-5,
-//                height: object.height-5,
-//                x: object.x+2.5,
-//                y: object.y+2.5
-//            })
-//        } else {
-//            animation.tile.stack = animation.tile.stack.filter((element) => element != tile)
-//            delete_object(tile_name)
-//            map[tile.y][tile.x] = 0
-//        }
-//    }
-//}, 10)
-
 // regeneration of the tile deck
 const generate_tile_type = () => {
     let index = tilesprops.deck.indexOf(0)
