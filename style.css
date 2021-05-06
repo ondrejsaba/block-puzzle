@@ -56,7 +56,7 @@ html, body {
 #reset-icon {
     height: 18px;
     width: 18px;
-    background-image: url('assets/reset.png');
+    background-image: url('assets/general/reset.png');
     background-size: cover;
     float: left;
     margin-right: 10px;
@@ -82,7 +82,7 @@ html, body {
 }
 
 #reset-btn:hover #reset-icon {
-    background-image: url('assets/reset-blue.png');
+    background-image: url('assets/general/reset-blue.png');
 }
 
 #render_canvas {

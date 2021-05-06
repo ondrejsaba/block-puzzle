@@ -18,6 +18,6 @@ let objects = {
         y: 0,
         width: canvas.width,
         height: 400,
-        source: "assets/board.png",
+        source: "assets/general/board.png",
     }
 }
