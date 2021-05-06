@@ -19,18 +19,18 @@ const put_images = () => {
 put_images()
 
 // object rendering
-const render_image = (x,y,width,height,id,opacity = 1) => {
+const render_image = (x, y, width, height, id, opacity = 1, scale = 1) => {
     const img = document.querySelector(`#${id}`)
     if (img.complete) {
         context.globalAlpha = opacity
-        context.drawImage(img,x,y,width,height)
+        context.drawImage(img,x+((width-width*scale)/2),y+((height-height*scale)/2),width*scale,height*scale)
     }
 }
 
-const render_rectangle = (x,y,width,height,color,opacity = 1) => {
+const render_rectangle = (x, y, width, height, color, opacity = 1, scale = 1) => {
     context.globalAlpha = opacity
     context.fillStyle = color
-    context.fillRect(x,y,width,height)
+    context.fillRect(x+((width-width*scale)/2),y+((height-height*scale)/2),width*scale,height*scale)
 }
 
 // object manipulation

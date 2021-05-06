@@ -20,9 +20,33 @@ let tilesprops = {
 
 let place_location = {x: 0, y: 0}
 
+const sounds = {
+    place: new Audio("assets/audio/place.wav")
+}
+
 const update_score = () => {
     document.querySelector("#score").innerHTML = score
 }
+
+//setInterval(async () => {
+//   for (tile of animation.tile.stack) {
+//        const tile_name = `placed-tile${tile.x}x${tile.y}`
+//        const object = objects[tile_name]
+//        if (object.opacity > 0.1) {
+//            Object.assign(object, {
+//                opacity: object.opacity-0.1,
+//                width: object.width-5,
+//                height: object.height-5,
+//                x: object.x+2.5,
+//                y: object.y+2.5
+//            })
+//        } else {
+//            animation.tile.stack = animation.tile.stack.filter((element) => element != tile)
+//            delete_object(tile_name)
+//            map[tile.y][tile.x] = 0
+//        }
+//    }
+//}, 10)
 
 // regeneration of the tile deck
 const generate_tile_type = () => {
@@ -63,6 +87,8 @@ const generate_tiles = () => {
             width: tiles[tilesprops.deck[index]].map[0].length*30,
             height: tiles[tilesprops.deck[index]].map.length*30,
             source: `assets/tiles/${tilesprops.deck[index]}.png`,
+            opacity: 0,
+            scale: 0,
 
             mousedown: () => {
                 if (!end) {
@@ -78,6 +104,8 @@ const generate_tiles = () => {
                 }
             },
         }
+        
+        animate("decktile", name.tile)
 
         put_images()
     }
@@ -94,27 +122,6 @@ const map_loop = (main, before = () => {}, after = () => {}) => {
     }
 }
 
-// animation - disappearing row/column
-let animation = {
-    stack: []
-}
-
-setInterval(async () => {
-   for (tile of animation.stack) {
-        const tile_name = `placed-tile${tile.x}x${tile.y}`
-        const object = objects[tile_name]
-        if (object.opacity > 0.1) {
-            Object.assign(object, {
-                opacity: object.opacity-0.1
-            })
-        } else {
-            animation.stack = animation.stack.filter((element) => element != tile)
-            delete_object(tile_name)
-            map[tile.y][tile.x] = 0
-        }
-    }
-}, 10)
-
 // checking for full rows or columns
 let count = {
     row: 0,
@@ -122,7 +129,6 @@ let count = {
 }
 
 const check_full = () => {
-    load_stack = []
     map_loop(() => {
         for (x = 0; x < map_size; x++) {
             if (map[y][x] != 0) {
@@ -141,26 +147,19 @@ const check_full = () => {
         if (map_size == count.row) {
             score += 10
             for (x = 0; x < map_size; x++) {
-                if (!load_stack.some((object) => object.x == x && object.y == y)) {
-                    load_stack.push({
-                        x: x,
-                        y: y
-                    })
+                if (!animations.tile.stack.some((object) => object.x == x && object.y == y)) {
+                    animate("tile", `placed-tile${x}x${y}`)
                 }
             }
         }
         if (map_size == count.column) {
             score += 10
             for (x = 0; x < map_size; x++) {
-                if (!load_stack.some((object) => object.x == y && object.y == x)) {
-                    load_stack.push({
-                        x: y,
-                        y: x
-                    })
+                if (!animations.tile.stack.some((object) => object.x == y && object.y == x)) {
+                    animate("tile", `placed-tile${y}x${x}`)
                 }
             } 
         }
-        animation.stack = [...load_stack]
     })
 }
 
@@ -236,6 +235,8 @@ canvas.addEventListener('mouseup', () => {
     if (tilesprops.focused !== "") {
         document.querySelector("#main").style.cursor = "default"
         if (tilesprops.can_place == true) {
+            sounds.place.play()
+
             const objects_to_delete = [
                 tilesprops.focused,
                 tilesprops.focused + "-shadow"
@@ -243,6 +244,7 @@ canvas.addEventListener('mouseup', () => {
             for (object of objects_to_delete) {
                 delete_object(object)
             }
+
             score += tiles[tilesprops.type].count
             let tilemap = tiles[tilesprops.type].map
             for (x = 0; x < tilemap[0].length; x++) {
@@ -268,7 +270,7 @@ canvas.addEventListener('mouseup', () => {
             const run_functions = [
                 check_full,
                 update_score,
-                generate_tiles,
+                generate_tiles
             ]
             
             for (func of run_functions) {

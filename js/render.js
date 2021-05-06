@@ -1,11 +1,11 @@
 const render_objects = (objects) => {
     for (object in objects) {
-        const { x, y, width, height, background, opacity } = objects[object]
+        const { x, y, width, height, background, opacity, scale } = objects[object]
         if (objects[object].hide != true) {
             if (objects[object].hasOwnProperty("source")) {
-                render_image(x,y,width,height,object,opacity)
+                render_image(x, y, width, height, object, opacity, scale)
             } else {
-                render_rectangle(x,y,width,height,background,opacity)
+                render_rectangle(x, y, width, height, background, opacity, scale)
             }
         }
     }
