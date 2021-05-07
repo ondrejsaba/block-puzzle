@@ -4,7 +4,6 @@ const sounds = {
 
 let end = false
 let score = 0
-const map_size = 8
 
 const map_loop = (main, before = () => {}, after = () => {}) => {
     for (y = 0; y < map_size; y++) {
@@ -17,11 +16,20 @@ const map_loop = (main, before = () => {}, after = () => {}) => {
 }
 
 let map = []
+const map_size = 8
 map_loop(() => {
     map[y][x] = 0
 }, () => {
     map.push([])
 })
+
+let tilesprops = {
+    deck: [0,0,0],
+    total: 0,
+    type: 0,
+    focused: "",
+    can_place: false
+}
 
 let bonuses = {
     total: {
@@ -30,7 +38,7 @@ let bonuses = {
     uses: {
         random: 0
     },
-    get: 100
+    get: 250
 }
 
 const update_bonuses = () => {
@@ -41,6 +49,7 @@ const update_bonuses = () => {
             innerHTML: total,
             style: `display: ${condition ? "block" : "none"}`
         })
+        document.querySelector(`#${bonus}-btn`).classList.toggle("bonus-active", condition)
     }
 }
 
@@ -52,31 +61,28 @@ const update_score = () => {
     update_bonuses()
 }
 
-let tilesprops = {
-    deck: [0,0,0],
-    total: 0,
-    type: 0,
-    focused: "",
-    can_place: false
+// predefined so that the generate_tiles function knows whether
+// to generate random tiles or use those included in the save that could exist
+let save = {
+    load: localStorage.getItem("save") ? true : false,
+    loaded: false
 }
 
-let place_location = {x: 0, y: 0}
-
 // regeneration of the tile deck
-const generate_tile_type = () => {
-    let index = tilesprops.deck.indexOf(0)
+const generate_tile_type = (index) => {
     let type = Math.floor(Math.random() * Object.keys(tiles).length) + 1
     if (tilesprops.deck.includes(type)) {
-        generate_tile_type()
+        generate_tile_type(index)
     } else {
         tilesprops.deck[index] = type
     }
 }
 
 const generate_tiles = () => {
-    while (tilesprops.deck.indexOf(0) != -1) {
+    while (tilesprops.deck.indexOf(0) != -1 || !save.loaded) {
         let index = tilesprops.deck.indexOf(0)
-        generate_tile_type()
+        save.load && !save.loaded ? tilesprops.deck[index] = save.deck[index] : generate_tile_type(index)
+        if (index == 2) save.loaded = true
 
         tilesprops.total += 1
         let name = {
@@ -124,7 +130,6 @@ const generate_tiles = () => {
         put_images()
     }
 }
-generate_tiles()
 
 // checking for full rows or columns
 let count = {
@@ -192,6 +197,8 @@ const check_moves = () => {
     return possible_moves
 }
 
+let place_location = {x: 0, y: 0}
+
 canvas.addEventListener('mousemove', () => {
     if (objects[tilesprops.focused] !== undefined) {
         Object.assign(objects[tilesprops.focused], {
@@ -227,7 +234,6 @@ canvas.addEventListener('mousemove', () => {
                 tilesprops.can_place = false
                 objects[`${tilesprops.focused}-shadow`].hide = true
             }
-
         } else {
             tilesprops.can_place = false
             objects[`${tilesprops.focused}-shadow`].hide = true
@@ -284,6 +290,7 @@ canvas.addEventListener('mouseup', () => {
             if (check_moves() == 0 && animation_done("tile")) {
                 document.querySelector("#end").style.display = "block"
                 document.querySelector("#reset-btn").classList.add("inactive")
+                localStorage.removeItem("save")
                 end = true
             }
         } else {

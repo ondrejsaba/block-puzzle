@@ -20,6 +20,7 @@ reset_buttons.forEach((btn) => {
             Object.keys(bonuses.uses).forEach((bonus) => {
                 bonuses.uses[bonus] = 0
             })
+            localStorage.removeItem("save")
 
             update_score()
             generate_tiles()
@@ -32,7 +33,7 @@ reset_buttons.forEach((btn) => {
 
 Object.keys(bonuses.total).forEach((bonus) => {
     document.querySelector(`#${bonus}-btn`).addEventListener("click", () => {
-        if (bonuses.total[bonus] > bonuses.uses[bonus]) {
+        if (bonuses.total[bonus] > bonuses.uses[bonus] && !end) {
             bonuses.uses[bonus] += 1
             tilesprops.deck = [0,0,0]
             

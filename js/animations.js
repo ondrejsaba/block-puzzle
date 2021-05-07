@@ -21,6 +21,7 @@ let animations = {
             if (check_moves() == 0) {
                 document.querySelector("#end").style.display = "block"
                 document.querySelector("#reset-btn").classList.add("inactive")
+                localStorage.removeItem("save")
                 end = true
             }
         }
