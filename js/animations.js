@@ -10,20 +10,14 @@ let animations = {
         to: {
             opacity: 0
         },
-
+        
         after: (object) => {
-            let {x, y} = objects[object]
+            let {x,y} = objects[object]
             x /= 50
             y /= 50
             map[y][x] = 0
-            delete_object(object)
 
-            if (check_moves() == 0) {
-                document.querySelector("#end").style.display = "block"
-                document.querySelector("#reset-btn").classList.add("inactive")
-                localStorage.removeItem("save")
-                end = true
-            }
+            delete_object(object)
         }
     },
 

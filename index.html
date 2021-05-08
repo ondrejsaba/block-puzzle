@@ -28,16 +28,23 @@
                     </div>
                     <div class="btn" id="reset-btn">
                         <div id="reset-btn-content">
-                            <div id="reset-icon"></div>reset
+                            <div id="reset-icon"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="end">
-                <div id="end-box">
-                    <h2>No moves left!</h2>
-                    <div class="btn" id="tryagain-btn">Try again</div>
+            <div id="dialog">
+                <div id="end-box" class="dialog-box">
+                    <h3>No moves left!</h3>
+                    <div class="btn confirm" id="tryagain-btn">Try again</div>
+                </div>
+                <div id="reset-box" class="dialog-box">
+                    <h3>Are you sure?</h3>
+                    <div class="btn-wrapper">
+                        <div class="btn confirm" id="reset-confirm-btn">Yes, reset</div>
+                        <div class="btn cancel" id="reset-cancel-btn">No, return</div>
+                    </div>
                 </div>
             </div>
 

@@ -1,8 +1,11 @@
+let reset_dialogue = false
+
 const reset_buttons = [
-    "#reset-btn",
-    "#tryagain-btn"
+    "#tryagain-btn",
+    "#reset-confirm-btn"
 ]
 
+// buttons that reset the game upon clicking
 reset_buttons.forEach((btn) => {
     document.querySelector(btn).onclick = () => {
         if (animation_done("tile") && animation_done("decktile")) {
@@ -25,11 +28,30 @@ reset_buttons.forEach((btn) => {
             update_score()
             generate_tiles()
 
-            document.querySelector("#end").style.display = "none"
-            document.querySelector("#reset-btn").classList.remove("inactive")
+            document.querySelector("#dialog").style.display = "none"
+            document.querySelector("#end-box").style.display = "none"
+            for (classname of ["inactive","close"]) {
+                document.querySelector("#reset-btn").classList.remove(classname)
+            }
+
+            reset_dialogue = false
         }
     }
 })
+
+// reset dialogue
+for (btn of ["#reset-btn","#reset-cancel-btn"]) {
+    document.querySelector(btn).onclick = () => {
+        if (!end) {
+            document.querySelector("#end-box").style.display = "none"
+            for (id of ["#dialog","#reset-box"]) {
+                document.querySelector(id).style.display = reset_dialogue ? "none" : "block"
+            }
+            document.querySelector("#reset-btn").classList.toggle("close")
+            reset_dialogue = !reset_dialogue
+        }
+    }
+}
 
 Object.keys(bonuses.total).forEach((bonus) => {
     document.querySelector(`#${bonus}-btn`).addEventListener("click", () => {
@@ -44,5 +66,6 @@ Object.keys(bonuses.total).forEach((bonus) => {
             generate_tiles()
         }
         update_bonuses()
+        set_save()
     })
 })

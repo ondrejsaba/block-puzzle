@@ -1,5 +1,6 @@
 const sounds = {
-    place: new Audio("assets/audio/place.wav")
+    place: new Audio("assets/audio/place.wav"),
+    fill: new Audio("assets/audio/fill.wav")
 }
 
 let end = false
@@ -44,10 +45,9 @@ let bonuses = {
 const update_bonuses = () => {
     for (bonus of Object.keys(bonuses.total)) {
         const total = bonuses.total[bonus] - bonuses.uses[bonus]
-        const condition = total > 0
+        const condition = total > 0 && !end
         Object.assign(document.querySelector(`#${bonus}-bubble`), {
-            innerHTML: total,
-            style: `display: ${condition ? "block" : "none"}`
+            innerHTML: total
         })
         document.querySelector(`#${bonus}-btn`).classList.toggle("bonus-active", condition)
     }
@@ -61,8 +61,8 @@ const update_score = () => {
     update_bonuses()
 }
 
-// predefined so that the generate_tiles function knows whether
-// to generate random tiles or use those included in the save that could exist
+// Predefined so that the generate_tiles function knows whether
+// to generate random tiles or use those included in the save that could exist.
 let save = {
     load: localStorage.getItem("save") ? true : false,
     loaded: false
@@ -111,7 +111,7 @@ const generate_tiles = () => {
             scale: 0,
 
             mousedown: () => {
-                if (!end) {
+                if (!end && !reset_dialogue) {
                     tilesprops.focused = hover.name
                     tilesprops.type = tilesprops.deck[index]
                     document.querySelector("#main").style.cursor = "none"
@@ -153,11 +153,16 @@ const check_full = () => {
             column: 0
         }
     }, () => {
+        // There are multiple if statements instead of a switch because
+        // of a possibility of clearing a row and a column at the same time.
+        // Maybe I'll try to find a better way in the future, but for now, it's fine.
+        let stack = []
+
         if (map_size == count.row) {
             score += 10
             for (x = 0; x < map_size; x++) {
                 if (!animations.tile.stack.some((object) => object.x == x && object.y == y)) {
-                    animate("tile", `placed-tile${x}x${y}`)
+                    stack.push({x: x, y: y})
                 }
             }
         }
@@ -165,10 +170,16 @@ const check_full = () => {
             score += 10
             for (x = 0; x < map_size; x++) {
                 if (!animations.tile.stack.some((object) => object.x == y && object.y == x)) {
-                    animate("tile", `placed-tile${y}x${x}`)
+                    stack.push({x: y, y: x})
                 }
             } 
         }
+        
+        [count.row,count.column].includes(map_size) ? sounds.fill.play() : sounds.place.play()
+
+        stack.forEach((tile) => {
+            animate("tile", `placed-tile${tile.x}x${tile.y}`)
+        })
     })
 }
 
@@ -245,8 +256,6 @@ canvas.addEventListener('mouseup', () => {
     if (tilesprops.focused !== "") {
         document.querySelector("#main").style.cursor = "default"
         if (tilesprops.can_place == true) {
-            sounds.place.play()
-
             const objects_to_delete = [
                 tilesprops.focused,
                 tilesprops.focused + "-shadow"
@@ -287,12 +296,18 @@ canvas.addEventListener('mouseup', () => {
                 func()
             }
 
-            if (check_moves() == 0 && animation_done("tile")) {
-                document.querySelector("#end").style.display = "block"
-                document.querySelector("#reset-btn").classList.add("inactive")
-                localStorage.removeItem("save")
-                end = true
-            }
+            setTimeout(() => {
+                if (check_moves() == 0 && animation_done("tile")) {
+                    ["#dialog","#end-box"].forEach((id) => {
+                        document.querySelector(id).style.display = "block"
+                    })
+                    document.querySelector("#reset-box").style.display = "none"
+                    document.querySelector("#reset-btn").classList.add("inactive")
+                    document.querySelector("#random-btn").classList.remove("bonus-active")
+                    localStorage.removeItem("save")
+                    end = true
+                }
+            }, (animations.tile.duration+(0.05))*1000)
         } else {
             Object.assign(objects[tilesprops.focused], {
                 x: objects[tilesprops.focused].default_x,
